@@ -33,6 +33,23 @@ describe('Login Page', () => {
     cy.url().should('include', '/home')
   })
 
+  it('shows authentication failure under the password field', () => {
+    cy.get('input[placeholder="Type your username here"]').type('invalid@example.com')
+    cy.get('input[placeholder="Type your password here"]').type('incorrect-password')
+
+    cy.get('.button').click()
+
+    cy.contains('Invalid username or password.').should('be.visible')
+    cy.get('input[name="password"]').should('have.value', '')
+    cy.get('.el-form-item:has(input[name="password"]) .el-form-item__error')
+      .should('be.visible')
+      .and('contain', 'Invalid username or password.')
+    cy.get('.el-form-item:has(input[placeholder="Type your username here"])')
+      .should('have.class', 'authentication-failed')
+    cy.get('.el-form-item:has(input[placeholder="Type your username here"]) .el-form-item__error')
+      .should('not.exist')
+  })
+
   it('handles "Forget password" click', () => {
     // Click the "Forget password?" link
     cy.contains('Forget password?').click()
