@@ -36,11 +36,7 @@ This matches the architecture described in `docs/design/architectural-design.md`
 4. `loginUser` is exported from `frontend/src/apis/login/index.ts`:
 
    ```ts
-   request.post<any, LoginResponse>(
-     '/users/login',
-     {},
-     { auth: loginData }
-   )
+   request.post<any, LoginResponse>("/users/login", {}, { auth: loginData });
    ```
 
    The shared Axios instance in `frontend/src/utils/request.ts` handles the HTTP request. It injects the token when present and unwraps the backend `Result` envelope from the Axios response.
@@ -62,8 +58,8 @@ This matches the architecture described in `docs/design/architectural-design.md`
 8. It then redirects with:
 
    ```ts
-   let redirect: any = route.query.redirect
-   router.push({ path: redirect || '/' })
+   let redirect: any = route.query.redirect;
+   router.push({ path: redirect || "/" });
    ```
 
 ## What it depends on
@@ -101,3 +97,5 @@ The design and requirements docs confirm this is the intended auth flow:
 ## Bottom line
 
 `Login.vue` is not just a form. It is the front-end authentication gateway for the app: it captures credentials, calls the authentication API, stores the issued JWT and profile, initializes the user's context, and moves the user from anonymous to authenticated state.
+
+No errors were found in this claim
