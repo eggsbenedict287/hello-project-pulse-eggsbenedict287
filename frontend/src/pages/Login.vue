@@ -14,17 +14,16 @@
         <el-form-item>
           <h2>Login</h2>
         </el-form-item>
-        <el-form-item prop="username" :class="{ 'authentication-failed': authenticationFailed }">
+        <el-form-item prop="username">
           <!-- Add icon to the input -->
           <el-input
             :prefix-icon="User"
             placeholder="Type your username here"
             v-model="loginData.username"
-            @input="clearAuthenticationError"
             @keydown.enter="login"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="password" :error="authenticationError">
+        <el-form-item prop="password">
           <el-input
             name="password"
             :prefix-icon="Lock"
@@ -32,7 +31,6 @@
             type="password"
             placeholder="Type your password here"
             v-model="loginData.password"
-            @input="clearAuthenticationError"
             @keydown.enter="login"
           ></el-input>
         </el-form-item>
@@ -61,7 +59,6 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import type { LoginData } from '@/apis/login/types'
@@ -73,10 +70,6 @@ const loginData = ref<LoginData>({
 
 // Add loading state
 const isLoading = ref(false)
-// Keep authentication failures separate from normal form validation so the
-// message can be shown under the password field while marking the username input.
-const authenticationError = ref('')
-const authenticationFailed = ref(false)
 
 const loginForm = ref()
 
@@ -111,15 +104,10 @@ import type { Instructor } from '@/apis/instructor/types'
 import type { Student } from '@/apis/student/types'
 
 async function login() {
-  // Remove the previous server-side authentication result before a new attempt.
-  clearAuthenticationError()
-
   try {
     await loginForm.value.validate() // Validate the form
   } catch (error) {
     console.error('Validation failed or an error occurred:', error)
-    // Do not send credentials when the required client-side fields are invalid.
-    return
   }
 
   isLoading.value = true
@@ -151,21 +139,9 @@ async function login() {
     router.push({ path: redirect || '/' })
   } catch (error) {
     console.error(error)
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
-      // Use one vague message for security and clear the password for a retry.
-      authenticationError.value = 'Invalid username or password.'
-      authenticationFailed.value = true
-      loginData.value.password = '' // Clear password field if auth fails
-    }
   } finally {
     isLoading.value = false
   }
-}
-
-function clearAuthenticationError() {
-  // Clear both the password-field message and the username failure styling.
-  authenticationError.value = ''
-  authenticationFailed.value = false
 }
 
 function goToForgotPassword() {
@@ -234,10 +210,6 @@ function goToForgotPassword() {
 
     .button {
       width: 100%;
-    }
-
-    :deep(.authentication-failed .el-input__wrapper) {
-      box-shadow: 0 0 0 1px var(--el-color-danger) inset;
     }
 
     .flex {
