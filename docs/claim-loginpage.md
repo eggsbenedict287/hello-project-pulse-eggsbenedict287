@@ -1,6 +1,6 @@
 # Claim: `frontend/src/pages/Login.vue` is the guest authentication entry page for Project Pulse
 
-`Login.vue` is the unauthenticated entry point for the SPA. It is responsible for collecting the user's email/username and password, validating the form, sending the credentials to the backend authentication endpoint, storing the returned JWT and user profile in client state, and redirecting the user into the authenticated app.
+`Login.vue` is the unauthenticated entry point for the SPA. It is responsible for collecting the user's email/username and password, validating the form, sending the credentials to the backend authentication endpoint, storing the returned JWT and user profile in client state, and redirecting the user into the authenticated app. r
 
 ## What it is responsible for
 
